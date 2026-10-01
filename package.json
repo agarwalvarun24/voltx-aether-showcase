@@ -1,0 +1,26 @@
+{
+  "name": "voltx-aether-showcase",
+  "version": "1.0.0",
+  "description": "Interactive Product Showcase for GDG on Campus SRM Recruitments 2026-27 (Technical Domain)",
+  "main": "dist/showcase.js",
+  "scripts": {
+    "start": "python server.py",
+    "dev": "python server.py",
+    "build": "tsc",
+    "generate:screenshots": "python scripts/generate_screenshots.py"
+  },
+  "keywords": [
+    "framer",
+    "gdg",
+    "interactive-showcase",
+    "typescript",
+    "python",
+    "web-audio"
+  ],
+  "author": "Candidate",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "framer-motion": "^11.0.0"
+  }
+}

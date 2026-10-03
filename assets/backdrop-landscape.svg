@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#050814" />
+      <stop offset="25%" stop-color="#0b1226" />
+      <stop offset="50%" stop-color="#182447" />
+      <stop offset="70%" stop-color="#3c2242" />
+      <stop offset="82%" stop-color="#732f2c" />
+      <stop offset="91%" stop-color="#bd4e24" />
+      <stop offset="97%" stop-color="#e8732a" />
+      <stop offset="100%" stop-color="#ffa043" />
+    </linearGradient>
+
+    <radialGradient id="sunGlow" cx="50%" cy="92%" r="65%">
+      <stop offset="0%" stop-color="#ff9d3b" stop-opacity="0.85" />
+      <stop offset="25%" stop-color="#e25822" stop-opacity="0.6" />
+      <stop offset="55%" stop-color="#80214a" stop-opacity="0.3" />
+      <stop offset="85%" stop-color="#182447" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="mountainBack" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a1b33" />
+      <stop offset="100%" stop-color="#0a0e1c" />
+    </linearGradient>
+
+    <linearGradient id="mountainMid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#191629" />
+      <stop offset="100%" stop-color="#060914" />
+    </linearGradient>
+
+    <linearGradient id="groundFore" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#101424" />
+      <stop offset="100%" stop-color="#03050a" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#skyGrad)" />
+  <rect width="1920" height="1080" fill="url(#sunGlow)" />
+
+  <!-- Mountain Silhouettes -->
+  <path d="M0,680 L80,660 L240,695 L400,640 L550,670 L720,625 L890,665 L1060,610 L1220,650 L1380,620 L1560,670 L1740,635 L1920,660 L1920,1080 L0,1080 Z" fill="url(#mountainBack)" opacity="0.75" />
+  <path d="M0,740 Q250,710 500,755 T1000,730 T1500,760 T1920,735 L1920,1080 L0,1080 Z" fill="url(#mountainMid)" opacity="0.9" />
+
+  <!-- Left Power Grid Pylon -->
+  <g transform="translate(140, 420) scale(0.9)" fill="#070a14" stroke="#05070d" stroke-width="1.5">
+    <polygon points="120,40 100,550 140,550" />
+    <line x1="40" y1="120" x2="200" y2="120" stroke="#070a14" stroke-width="4" />
+    <line x1="20" y1="190" x2="220" y2="190" stroke="#070a14" stroke-width="5" />
+    <line x1="30" y1="270" x2="210" y2="270" stroke="#070a14" stroke-width="5" />
+    <circle cx="120" cy="15" r="4" fill="#ff3b30" />
+  </g>
+
+  <!-- Right Hero Pylon -->
+  <g transform="translate(1620, 320) scale(1.15)" fill="#05070f" stroke="#03050a" stroke-width="1.5">
+    <polygon points="120,30 95,580 145,580" />
+    <line x1="40" y1="110" x2="200" y2="110" stroke="#05070f" stroke-width="4.5" />
+    <line x1="15" y1="185" x2="225" y2="185" stroke="#05070f" stroke-width="5.5" />
+    <line x1="25" y1="265" x2="215" y2="265" stroke="#05070f" stroke-width="5.5" />
+    <circle cx="120" cy="5" r="4.5" fill="#ff3b30" />
+  </g>
+
+  <!-- Power Cables -->
+  <g fill="none" stroke="#090d17" stroke-width="1.5" opacity="0.75">
+    <path d="M-50,530 Q90,560 176,528 Q500,610 900,640 Q1300,650 1666,446 Q1780,500 1950,520" />
+    <path d="M-50,575 Q90,610 158,591 Q500,670 900,700 Q1300,710 1637,532 Q1770,570 1950,590" />
+  </g>
+
+  <path d="M0,820 Q300,790 600,830 T1200,810 T1800,840 L1920,830 L1920,1080 L0,1080 Z" fill="url(#groundFore)" />
+  <rect x="0" y="700" width="1920" height="380" fill="url(#groundFore)" opacity="0.85" />
+</svg>

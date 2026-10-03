@@ -1,0 +1,198 @@
+.ambient-backdrop-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #04060c;
+  transition: background-color 0.6s ease;
+}
+
+/* ================= OPTION 1: STUDIO DARKROOM (APPLE / NOTHING STYLE) ================= */
+body[data-bg="studio"] .ambient-backdrop-container {
+  background: radial-gradient(circle at 50% 45%, #0d1527 0%, #060914 55%, #020308 100%);
+}
+
+body[data-bg="studio"] .backdrop-svg-layer,
+body[data-bg="studio"] .backdrop-horizon-glow,
+body[data-bg="studio"] .cyber-grid-plane {
+  display: none;
+}
+
+/* Mouse-Tracking Spotlight */
+.mouse-spotlight {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle 650px at var(--mouse-screen-x, 50%) var(--mouse-screen-y, 45%),
+    rgba(var(--accent-rgb), 0.22) 0%,
+    rgba(var(--accent-rgb), 0.08) 40%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Acoustic Wave Rings */
+.acoustic-ripples {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  pointer-events: none;
+  z-index: 1;
+  display: none;
+}
+
+body[data-bg="studio"] .acoustic-ripples {
+  display: block;
+}
+
+.ripple-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--accent-color);
+  opacity: 0.15;
+  animation: rippleExpand 8s infinite linear;
+}
+
+.ripple-circle:nth-child(2) { animation-delay: 2.6s; }
+.ripple-circle:nth-child(3) { animation-delay: 5.3s; }
+
+@keyframes rippleExpand {
+  0% { transform: scale(0.3); opacity: 0.35; }
+  50% { opacity: 0.15; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* ================= OPTION 2: STRATOSPHERE SUNSET (CLEAN - NO PYLONS) ================= */
+body[data-bg="sunset"] .ambient-backdrop-container {
+  background: #050814;
+}
+
+body[data-bg="sunset"] .backdrop-svg-layer,
+body[data-bg="sunset"] .backdrop-horizon-glow {
+  display: block;
+}
+
+body[data-bg="sunset"] .mouse-spotlight,
+body[data-bg="sunset"] .acoustic-ripples,
+body[data-bg="sunset"] .cyber-grid-plane {
+  display: none;
+}
+
+body[data-bg="sunset"] .backdrop-horizon-glow {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120vw;
+  height: 55vh;
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 90%,
+    var(--variant-glow-core, rgba(255, 126, 41, 0.7)) 0%,
+    var(--variant-glow-aura, rgba(168, 43, 85, 0.35)) 40%,
+    transparent 100%
+  );
+  filter: blur(40px);
+  opacity: 0.85;
+}
+
+/* ================= OPTION 3: CYBER-ACOUSTIC WAVEFORM GRID ================= */
+body[data-bg="cyber"] .ambient-backdrop-container {
+  background: radial-gradient(circle at 50% 30%, #091226 0%, #030611 70%, #010206 100%);
+}
+
+body[data-bg="cyber"] .backdrop-svg-layer,
+body[data-bg="cyber"] .backdrop-horizon-glow,
+body[data-bg="cyber"] .acoustic-ripples {
+  display: none;
+}
+
+body[data-bg="cyber"] .cyber-grid-plane {
+  display: block;
+}
+
+.cyber-grid-plane {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45vh;
+  perspective: 600px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cyber-grid-lines {
+  position: absolute;
+  inset: -50% -50% 0 -50%;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    linear-gradient(to right, rgba(var(--accent-rgb), 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(var(--accent-rgb), 0.2) 1px, transparent 1px);
+  background-size: 50px 50px;
+  transform: rotateX(72deg) translateY(-20%);
+  transform-origin: center bottom;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 20%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 20%, transparent 80%);
+}
+
+/* Common Layers */
+#particlesCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+.cinematic-vignette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(1, 2, 5, 0.85) 100%);
+  pointer-events: none;
+}
+
+/* Switcher Button Bar */
+.bg-switcher-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(14, 22, 42, 0.7);
+  border: 1px solid var(--border-glass);
+  padding: 0.3rem 0.5rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(16px);
+}
+
+.bg-switcher-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.bg-switcher-btn:hover { color: #fff; }
+.bg-switcher-btn.active {
+  background: rgba(var(--accent-rgb), 0.25);
+  color: var(--accent-color);
+  box-shadow: 0 0 12px -2px var(--accent-glow);
+}

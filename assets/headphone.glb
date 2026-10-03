@@ -1,0 +1,94 @@
+cat << 'EOF' > scripts/build_headphone_glb.py
+import struct, json, math, os
+
+def create_headband(radius=0.68, tube_r=0.032, arc_segs=36, tube_segs=16):
+    verts, norms, indices = [], [], []
+    for i in range(arc_segs + 1):
+        theta = math.pi * i / arc_segs
+        cx = -radius * math.cos(theta)
+        cy = radius * math.sin(theta) + 0.1
+        nx_curve, ny_curve = math.cos(theta), -math.sin(theta)
+        for j in range(tube_segs + 1):
+            phi = 2.0 * math.pi * j / tube_segs
+            px = cx + tube_r * (nx_curve * math.cos(phi))
+            py = cy + tube_r * (ny_curve * math.cos(phi))
+            pz = tube_r * math.sin(phi)
+            verts.extend([round(px, 4), round(py, 4), round(pz, 4)])
+            norms.extend([round(nx_curve * math.cos(phi), 4), round(ny_curve * math.cos(phi), 4), round(math.sin(phi), 4)])
+    for i in range(arc_segs):
+        for j in range(tube_segs):
+            first = i * (tube_segs + 1) + j
+            second = first + tube_segs + 1
+            indices.extend([first, second, first + 1, second, second + 1, first + 1])
+    return verts, norms, indices
+
+def create_earcup(center_x, center_y, rx=0.18, ry=0.25, rz=0.12, segs_lat=16, segs_lon=24):
+    verts, norms, indices = [], [], []
+    for i in range(segs_lat + 1):
+        theta = math.pi * i / segs_lat
+        sin_t, cos_t = math.sin(theta), math.cos(theta)
+        for j in range(segs_lon + 1):
+            phi = 2.0 * math.pi * j / segs_lon
+            px = center_x + rx * sin_t * math.cos(phi)
+            py = center_y + ry * cos_t
+            pz = rz * sin_t * math.sin(phi)
+            nx = (sin_t * math.cos(phi)) / rx
+            ny = cos_t / ry
+            nz = (sin_t * math.sin(phi)) / rz
+            n_len = math.hypot(nx, ny, nz)
+            verts.extend([round(px, 4), round(py, 4), round(pz, 4)])
+            norms.extend([round(nx/n_len, 4), round(ny/n_len, 4), round(nz/n_len, 4)])
+    for i in range(segs_lat):
+        for j in range(segs_lon):
+            first = i * (segs_lon + 1) + j
+            second = first + segs_lon + 1
+            indices.extend([first, second, first + 1, second, second + 1, first + 1])
+    return verts, norms, indices
+
+def build_headphone_glb(output_path="assets/headphone.glb"):
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    hb_v, hb_n, hb_i = create_headband()
+    el_v, el_n, el_i = create_earcup(-0.68, -0.12)
+    er_v, er_n, er_i = create_earcup(0.68, -0.12)
+    all_verts = hb_v + el_v + er_v
+    all_norms = hb_n + el_n + er_n
+    offset_l = len(hb_v) // 3
+    offset_r = offset_l + len(el_v) // 3
+    all_indices = hb_i + [idx + offset_l for idx in el_i] + [idx + offset_r for idx in er_i]
+    v_bytes = struct.pack(f'<{len(all_verts)}f', *all_verts)
+    n_bytes = struct.pack(f'<{len(all_norms)}f', *all_norms)
+    i_bytes = struct.pack(f'<{len(all_indices)}H', *all_indices)
+    pad4 = lambda b: b + b'\x00' * ((4 - (len(b) % 4)) % 4)
+    i_pad, v_pad, n_pad = pad4(i_bytes), pad4(v_bytes), pad4(n_bytes)
+    bin_buffer = i_pad + v_pad + n_pad
+    gltf = {
+        "asset": {"version": "2.0"},
+        "scenes": [{"nodes": [0]}],
+        "nodes": [{"mesh": 0}],
+        "materials": [{"pbrMetallicRoughness": {"baseColorFactor": [0.18, 0.22, 0.28, 1.0], "metallicFactor": 0.92, "roughnessFactor": 0.25}}],
+        "meshes": [{"primitives": [{"attributes": {"POSITION": 1, "NORMAL": 2}, "indices": 0, "material": 0}]}],
+        "buffers": [{"byteLength": len(bin_buffer)}],
+        "bufferViews": [
+            {"buffer": 0, "byteOffset": 0, "byteLength": len(i_bytes), "target": 34963},
+            {"buffer": 0, "byteOffset": len(i_pad), "byteLength": len(v_bytes), "target": 34962},
+            {"buffer": 0, "byteOffset": len(i_pad) + len(v_pad), "byteLength": len(n_bytes), "target": 34962}
+        ],
+        "accessors": [
+            {"bufferView": 0, "byteOffset": 0, "componentType": 5123, "count": len(all_indices), "type": "SCALAR"},
+            {"bufferView": 1, "byteOffset": 0, "componentType": 5126, "count": len(all_verts)//3, "type": "VEC3", "min": [min(all_verts[0::3]), min(all_verts[1::3]), min(all_verts[2::3])], "max": [max(all_verts[0::3]), max(all_verts[1::3]), max(all_verts[2::3])]},
+            {"bufferView": 2, "byteOffset": 0, "componentType": 5126, "count": len(all_norms)//3, "type": "VEC3"}
+        ]
+    }
+    json_bytes = pad4(json.dumps(gltf).encode('utf-8'))
+    total_len = 12 + (8 + len(json_bytes)) + (8 + len(bin_buffer))
+    glb = bytearray(struct.pack('<III', 0x46546C67, 2, total_len))
+    glb.extend(struct.pack('<II', len(json_bytes), 0x4E4F534A))
+    glb.extend(json_bytes)
+    glb.extend(struct.pack('<II', len(bin_buffer), 0x004E4942))
+    glb.extend(bin_buffer)
+    with open(output_path, 'wb') as f: f.write(glb)
+    print(f"Generated 3D GLB model at {output_path}")
+
+if __name__ == "__main__": build_headphone_glb()
+EOF
+python scripts/build_headphone_glb.py

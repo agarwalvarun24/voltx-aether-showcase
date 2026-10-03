@@ -98,7 +98,6 @@
 
       <!-- Center: True 3D WebGL Volumetric Headphone Viewport (Dead-Center Aligned) -->
       <div class="product-viewport-col" id="productViewport">
-        <div class="viewport-drag-hint" id="viewportDragHint"><span>✦ Drag to Rotate 360° in 3D</span> • Scroll to Zoom</div>
 
         <!-- Three.js Real 3D WebGL Canvas Container -->
         <div id="product3DCanvasContainer" class="product-3d-canvas-container"></div>
@@ -586,8 +585,6 @@ addPropertyControls(VoltxAetherShowcase, {
         this.vx = 0;
         this.vy = 0;
         this.container.style.cursor = 'grabbing';
-        const hint = document.getElementById('viewportDragHint');
-        if (hint) hint.style.opacity = '0';
       };
 
       const onMove = (cx, cy) => {
